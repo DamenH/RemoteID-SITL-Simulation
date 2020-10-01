@@ -1,5 +1,4 @@
 #pragma once
-
 #include "../SIM_Multicopter.h"
 
 namespace SITL { class MultiCopter;}
@@ -15,6 +14,7 @@ public:
         multicopter(_multicopter)
     {}
 
+
     void update();
 
 protected:
@@ -29,6 +29,7 @@ protected:
     uint64_t nextDynamicUpdate = 0;
 
 };
+
 
 
 }

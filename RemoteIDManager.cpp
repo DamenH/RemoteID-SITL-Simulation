@@ -7,7 +7,6 @@ using namespace RemoteID;
 void RemoteIDManager::update()
 {
 
-
     uint64_t current_time = multicopter->get_time_now_us();
 
     // print sim time

@@ -22,6 +22,8 @@
 #include <stdio.h>
 #include <inttypes.h>
 
+#include "RemoteID/RemoteIDManager.cpp";
+
 using namespace SITL;
 
 MultiCopter::MultiCopter(const char *frame_str) :
@@ -82,7 +84,7 @@ void MultiCopter::update(const struct sitl_input &input)
     time_advance();
 
     
-    // call update on DroneIDManager
+    // call update on RemoteIDManager
     remoteIdManager->update();
 
     // update magnetic field
