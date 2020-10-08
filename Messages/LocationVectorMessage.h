@@ -1,4 +1,4 @@
-struct LocationVectorMessage {
+struct LocationVectorMessageData {
     unsigned Status : 4;
     unsigned Flags : 4;
     unsigned TrackDirection : 8;
@@ -17,4 +17,14 @@ struct LocationVectorMessage {
     unsigned Reserved23 : 4;
     unsigned TimestampAccuracy : 4;
     unsigned Reserved24 : 8;
+} LocationVector;
+
+class LocationVectorMessage {
+    public:
+        static void Encode(
+
+        )
+        {
+
+        }
 };
