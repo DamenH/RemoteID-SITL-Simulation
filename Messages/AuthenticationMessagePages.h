@@ -21,5 +21,10 @@ class AuthenticationMessagePages {
             {
                 AuthenticationPages.AuthenticationData[i] = authenticationData[i];
             }
+        };
+
+        static void Copy(uint8_t authenticationMessagePages[24])
+        {
+
         }
 };

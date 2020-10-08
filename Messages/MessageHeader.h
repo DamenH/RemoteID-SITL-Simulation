@@ -21,4 +21,9 @@ class MessageHeader {
                 Header.MessageData[i] = messageData[i];
             }
         }
+
+        static void Copy(uint8_t message[25])
+        {
+
+        }
 };

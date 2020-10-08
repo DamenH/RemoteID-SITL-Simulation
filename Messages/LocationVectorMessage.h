@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 struct LocationVectorMessageData {
     unsigned Status : 4;
     unsigned Flags : 4;
@@ -24,6 +26,11 @@ class LocationVectorMessage {
         static void Encode(
 
         )
+        {
+
+        };
+
+        static void Copy(uint8_t locationVectorMessage[24])
         {
 
         }

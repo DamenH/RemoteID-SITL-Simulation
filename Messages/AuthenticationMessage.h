@@ -35,5 +35,10 @@ class AuthenticationMessage {
                 Authentication.AuthenticationData[i] = authenticationData[i];
             }
 
+        };
+
+        static void Copy(uint8_t authenticationMessage[24])
+        {
+
         }
 };

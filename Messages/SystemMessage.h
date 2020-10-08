@@ -25,5 +25,10 @@ class SystemMessage {
         {
             System.Flags = flags;
             System.AreaRadius = areaRadius;
-        } 
+        };
+
+        static void Copy(uint8_t systemMessage[24])
+        {
+
+        }
 };

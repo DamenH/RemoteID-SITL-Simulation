@@ -20,5 +20,10 @@ class OperatorIDMessage {
                 OperatorID.OperatorID[i] = operatorId[i];
             }
 
+        };
+
+        static void Copy(uint8_t operatorIdMessage[24])
+        {
+
         }
 };

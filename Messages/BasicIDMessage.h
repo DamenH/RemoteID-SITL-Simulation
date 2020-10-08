@@ -30,5 +30,22 @@ class BasicIDMessage {
                 BasicID.Reserve[i] = reserve[i];
             }
 
-        } 
+        };
+
+        static void Copy(uint8_t basicIdMessage[24])
+        {
+            basicIdMessage[0] = (BasicID.IDType << 4) | BasicID.UAType;
+
+            for(int i = 0; i < 20; i++)
+            {
+                basicIdMessage[i + 1] = BasicID.UASID[i];
+            }
+
+            for(int i = 0; i < 3; i++)
+            {
+                basicIdMessage[i + 21] = BasicID.Reserve[i];
+            }
+
+
+        }
 };

@@ -18,5 +18,10 @@ class SelfIDMessage {
             {
                 SelfID.Description[i] = description[i];
             }
+        };
+
+        static void Copy(uint8_t selfIdMessage[24])
+        {
+
         }
 };
