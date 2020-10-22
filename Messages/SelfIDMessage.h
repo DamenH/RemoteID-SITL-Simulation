@@ -1,26 +1,29 @@
 #include <stdint.h>
 
-struct SelfIDMessageData {
-    unsigned DescriptionType : 8;
-    uint8_t Description[23];
-} SelfID;
+struct selfIDMessageData {
+    unsigned descriptionType : 8;
+    uint8_t description[23];
+};
 
-class SelfIDMessage {
+class SelfIDMessage: public MessageBody {
     public:
-        static void Encode(
+
+        struct selfIDMessageData selfID;
+
+        SelfIDMessage(
             uint8_t descriptionType,
             uint8_t description[23]
         )
         {
-            SelfID.DescriptionType = descriptionType;
+            selfID.descriptionType = descriptionType;
 
             for(int i = 0; i < 23; i++)
             {
-                SelfID.Description[i] = description[i];
+                selfID.description[i] = description[i];
             }
         };
 
-        static void Copy(uint8_t selfIdMessage[24])
+        void Print() override
         {
 
         }

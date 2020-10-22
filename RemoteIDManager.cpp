@@ -10,114 +10,129 @@ using namespace RemoteID;
 void RemoteIDManager::update()
 {
 
-    // uint64_t current_time = multicopter->get_time_now_us();
+    uint64_t current_time = multicopter->get_time_now_us();
 
-    // print sim time
-    // printf("%" PRIu64 "\n", current_time);
+    // Static Updates
+    if(current_time >= nextStaticUpdate) {
+        // Basic
+        uint8_t uasID[20] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
+        uint8_t idType = 3;
+        uint8_t uaType = 0;
+        BasicIDMessage *basicIdMessage = new BasicIDMessage(idType, uaType, uasID);
+        MessageBody *basicBody = basicIdMessage;
+        MessageHeader *basicMessageHeader = new MessageHeader(0x0, basicBody);
+        basicMessageHeader->Print();
 
-    uint8_t uasID[20] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
-    uint8_t idType = 3;
-    uint8_t uaType = 0;
+        // Auth
+        uint8_t authType;
+        uint8_t pageNumber;
+        uint8_t pageCount;
+        uint8_t length;
+        uint8_t authenticationTimestamp[4];
+        uint8_t authenticationData[17];
+        AuthenticationMessage *authenticationMessage =  new AuthenticationMessage(
+            authType, 
+            pageNumber,
+            pageCount,
+            length,
+            authenticationTimestamp,
+            authenticationData
+        );
+        MessageBody *authenticationMessageBody = authenticationMessage;
+        MessageHeader *authenticationMessageHeader = new MessageHeader(0x2, authenticationMessageBody);
+        authenticationMessageHeader->Print();
 
-    BasicIDMessage::Encode(idType, uaType, uasID);
-    uint8_t basicIdMessage[24];
-    BasicIDMessage::Copy(basicIdMessage);
+        // AuthPages
+        uint8_t authPagesType;
+        uint8_t pagesNumber;
+        uint8_t authenticationPagesData[23];
+        AuthenticationMessagePages *authenticationMessagePages =  new AuthenticationMessagePages(authPagesType, pagesNumber, authenticationPagesData);
+        MessageBody *authenticationPagesMessageBody = authenticationMessagePages;
+        MessageHeader *authenticationMessagePagesHeader = new MessageHeader(0x2, authenticationPagesMessageBody);
+        authenticationMessagePagesHeader->Print();
 
-    MessageHeader::Encode(0x0, basicIdMessage);
-    uint8_t basicId[25];
-    MessageHeader::Copy(basicId);
+        // SelfID
+        uint8_t descriptionType;
+        uint8_t description[23];
+        SelfIDMessage *selfIDMessage =  new SelfIDMessage(descriptionType, description);
+        MessageBody *selfIDMessageBody = selfIDMessage;
+        MessageHeader *selfIDMessageHeader = new MessageHeader(0x3, selfIDMessageBody);
+        selfIDMessageHeader->Print();
 
-    // location vector params
+        // SystemMessage
+        uint8_t systemFlags;
+        uint8_t operatorLatitude[4];
+        uint8_t operatorLongitude[4];
+        uint8_t areaCount[2];
+        uint8_t areaRadius;
+        uint8_t AreaCeiling[2];
+        uint8_t AreaFloor[2];
+        SystemMessage *systemMessage =  new SystemMessage(            
+            systemFlags,
+            operatorLatitude,
+            operatorLongitude,
+            areaCount,
+            areaRadius,
+            AreaCeiling,
+            AreaFloor
+        );
+        MessageBody *systemMessageBody = systemMessage;
+        MessageHeader *systemMessageHeader = new MessageHeader(0x3, systemMessageBody);
+        systemMessageHeader->Print();
 
-    LocationVectorMessage::Encode();
-    uint8_t locationVectorMessage[24];
-    LocationVectorMessage::Copy(locationVectorMessage);
+        // OperatorID
+        uint8_t operatorIdType;
+        uint8_t operatorId[20];
+        OperatorIDMessage *operatorIDMessage =  new OperatorIDMessage(operatorIdType, operatorId);
+        MessageBody *operatorIDMessageBody = operatorIDMessage;
+        MessageHeader *operatorIDMessageHeader = new MessageHeader(0x3, operatorIDMessageBody);
+        operatorIDMessageHeader->Print();
 
-    MessageHeader::Encode(0x0, locationVectorMessage);
-    uint8_t locationVector[25];
-    MessageHeader::Copy(basicId);
+        nextStaticUpdate += LegacyBTStatic;
+    }
 
-    // location vector params
+    // Dynamic Updates
+    if(current_time >= nextDynamicUpdate) {
+        // Location
+        uint8_t status = 0;
+        uint8_t locationVectorFlags = 0;
+        uint8_t trackDirection; // calculate from velocity_ef
+        uint8_t speed; // calculate from velocity_ef
+        uint8_t verticalSpeed; // calculate from velocity_ef
+        uint8_t latitude[4]; // calculate from  position
+        uint8_t longitude[4]; // calculate from  position
+        uint8_t pressureAltitude[2];
+        uint8_t geodeticAltitude[2];
+        uint8_t height[2]; // calculate from  position
+        uint8_t verticalAccuracy = 0;
+        uint8_t horizontalAccuracy = 0;
+        uint8_t baroAltitudeAccuracy = 0;
+        uint8_t speedAccuracy = 0;
+        uint8_t locationVectorTimestamp[2]; // 0–36000
+        uint8_t timestampAccuracy = 0;
+        LocationVectorMessage *locationVectorMessage =  new LocationVectorMessage(
+            status,
+            locationVectorFlags,
+            trackDirection,
+            speed,
+            verticalSpeed,
+            latitude,
+            longitude,
+            pressureAltitude,
+            geodeticAltitude,
+            height,
+            verticalAccuracy,
+            horizontalAccuracy,
+            baroAltitudeAccuracy,
+            speedAccuracy,
+            locationVectorTimestamp,
+            timestampAccuracy
+        );
+        MessageBody *locationVectorMessageBody = locationVectorMessage;
+        MessageHeader *locationVectorMessageHeader = new MessageHeader(0x1, locationVectorMessageBody);
+        locationVectorMessageHeader->Print();
 
-    LocationVectorMessage::Encode();
-    uint8_t locationVectorMessage[24];
-    LocationVectorMessage::Copy(locationVectorMessage);
-
-    MessageHeader::Encode(0x1, locationVectorMessage);
-    uint8_t locationVector[25];
-    MessageHeader::Copy(locationVector);
-
-    // authentication params
-
-    // AuthenticationMessage::Encode();
-    uint8_t authenticationMessage[24];
-    AuthenticationMessage::Copy(authenticationMessage);
-
-    MessageHeader::Encode(0x2, authenticationMessage);
-    uint8_t authentication[25];
-    MessageHeader::Copy(authentication);
-
-    // authentication pages params
-
-    // AuthenticationMessagePages::Encode();
-    uint8_t authenticationMessagePages[24];
-    AuthenticationMessagePages::Copy(authenticationMessagePages);
-
-    MessageHeader::Encode(0x2, authenticationMessagePages);
-    uint8_t authenticationPages[25];
-    MessageHeader::Copy(authenticationPages);
-
-    // self id params
-
-    // SelfIDMessage::Encode();
-    uint8_t selfIdMessage[24];
-    SelfIDMessage::Copy(selfIdMessage);
-
-    MessageHeader::Encode(0x3, selfIdMessage);
-    uint8_t selfId[25];
-    MessageHeader::Copy(selfId);
-
-    // system params
-
-    // SystemMessage::Encode();
-    uint8_t systemMessage[24];
-    SystemMessage::Copy(systemMessage);
-
-    MessageHeader::Encode(0x4, systemMessage);
-    uint8_t system[25];
-    MessageHeader::Copy(system);
-
-    // operator params
-
-    // OperatorIDMessage::Encode();
-    uint8_t operatorIdMessage[24];
-    OperatorIDMessage::Copy(operatorIdMessage);
-
-    MessageHeader::Encode(0x5, operatorIdMessage);
-    uint8_t operatorId[25];
-    MessageHeader::Copy(operatorId);
-
-    
-
-
-    // std::cout << "ID Type: " << BasicID.IDType << '\n';
-    // std::cout << "UA Type: " << BasicID.UAType << '\n';
-    // for(int i = 0; i < 20; i++)
-    // {
-    //     std::cout << (int)BasicID.UASID[i] << ' ';
-    // }
-    // std::cout << '\n';
-
-
-    // if(current_time >= nextStaticUpdate) {
-    //     printf("Broadcast BT Legacy Static\n");
-    //     nextStaticUpdate += LegacyBTStatic;
-    // }
-
-    // if(current_time >= nextDynamicUpdate) {
-    //     printf("Broadcast BT Legacy Dynamic\n");
-    //     nextDynamicUpdate += LegacyBTDynamic;
-    // }
-
+        nextDynamicUpdate += LegacyBTDynamic;
+    }
     
 }

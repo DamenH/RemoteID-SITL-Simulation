@@ -4,25 +4,28 @@ struct OperatorIDMessageData {
     unsigned OperatorIDType : 8;
     uint8_t OperatorID[20];
     uint8_t Reserved[3];
-} OperatorID;
+};
 
-class OperatorIDMessage {
+class OperatorIDMessage: public MessageBody {
     public:
-        static void Encode(
+
+        struct OperatorIDMessageData operatorID;
+
+        OperatorIDMessage(
             uint8_t operatorIdType,
             uint8_t operatorId[20]
         )
         {
-            OperatorID.OperatorIDType = operatorIdType;
+            operatorID.OperatorIDType = operatorIdType;
 
             for(int i = 0; i < 20; i++)
             {
-                OperatorID.OperatorID[i] = operatorId[i];
+                operatorID.OperatorID[i] = operatorId[i];
             }
 
         };
 
-        static void Copy(uint8_t operatorIdMessage[24])
+        void Print() override
         {
 
         }

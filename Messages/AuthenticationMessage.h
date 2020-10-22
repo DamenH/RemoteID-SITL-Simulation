@@ -1,17 +1,20 @@
 #include <stdint.h>
 
-struct AuthenticationMessageData {
-    unsigned AuthType : 4;
-    unsigned PageNumber : 4;
-    unsigned PageCount : 8;
-    unsigned Length : 8;
-    uint8_t Timestamp[4];
-    uint8_t AuthenticationData[17];
-} Authentication;
+struct authenticationMessageData {
+    unsigned authType : 4;
+    unsigned pageNumber : 4;
+    unsigned pageCount : 8;
+    unsigned length : 8;
+    uint8_t timestamp[4];
+    uint8_t authenticationData[17];
+};
 
-class AuthenticationMessage {
+class AuthenticationMessage: public MessageBody {
     public:
-        static void Encode(
+
+        struct authenticationMessageData authentication;
+        
+        AuthenticationMessage(
             uint8_t authType, 
             uint8_t pageNumber,
             uint8_t pageCount,
@@ -20,24 +23,24 @@ class AuthenticationMessage {
             uint8_t authenticationData[17]
         )
         {
-            Authentication.AuthType = authType & 0xF;
-            Authentication.PageNumber = pageNumber & 0xF;
-            Authentication.PageCount = pageCount;
-            Authentication.Length = length;
+            authentication.authType = authType;
+            authentication.pageNumber = pageNumber;
+            authentication.pageCount = pageCount;
+            authentication.length = length;
 
             for(int i = 0; i < 4; i++)
             {
-                Authentication.Timestamp[i] = timestamp[i];
+                authentication.timestamp[i] = timestamp[i];
             }
 
             for(int i = 0; i < 17; i++)
             {
-                Authentication.AuthenticationData[i] = authenticationData[i];
+                authentication.authenticationData[i] = authenticationData[i];
             }
 
         };
 
-        static void Copy(uint8_t authenticationMessage[24])
+        void Print() override
         {
 
         }

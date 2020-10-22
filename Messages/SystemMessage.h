@@ -9,11 +9,14 @@ struct SystemMessageData {
     uint8_t AreaCeiling[2];
     uint8_t AreaFloor[2];
     uint8_t Reserved[8];
-} System;
+};
 
-class SystemMessage {
+class SystemMessage: public MessageBody {
     public:
-        static void Encode(
+
+        struct SystemMessageData system;
+
+        SystemMessage(
             uint8_t flags,
             uint8_t operatorLatitude[4],
             uint8_t operatorLongitude[4],
@@ -23,11 +26,11 @@ class SystemMessage {
             uint8_t AreaFloor[2]
         )
         {
-            System.Flags = flags;
-            System.AreaRadius = areaRadius;
+            system.Flags = flags;
+            system.AreaRadius = areaRadius;
         };
 
-        static void Copy(uint8_t systemMessage[24])
+        void Print() override
         {
 
         }

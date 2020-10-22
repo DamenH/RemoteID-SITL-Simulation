@@ -1,51 +1,46 @@
 #include <stdint.h>
+#include <iostream>
 
-struct BasicMessageData {
-    unsigned IDType : 4;
-    unsigned UAType : 4;
-    uint8_t UASID[20];
-    uint8_t Reserve[3];
-} BasicID;
+struct basicMessageData {
+    unsigned idType : 4;
+    unsigned uaType : 4;
+    uint8_t uasid[20];
+    uint8_t reserve[3];
+};
 
-class BasicIDMessage {
+class BasicIDMessage: public MessageBody {
     public:
-       static void Encode(
+
+        struct basicMessageData basicIDMessage;
+
+        BasicIDMessage(
            uint8_t idType,
            uint8_t uaType,
            uint8_t uasId[20]
         )
        {
-            BasicID.IDType = idType & 0xF;
-            BasicID.UAType = uaType & 0xF;
+            basicIDMessage.idType = idType;
+            basicIDMessage.uaType = uaType;
 
             for(int i = 0; i < 20; i++)
             {
-                BasicID.UASID[i] = uasId[i];
+                basicIDMessage.uasid[i] = uasId[i];
             }
 
             uint8_t reserve[3] = {0,0,0};
 
             for(int i = 0; i < 3; i++)
             {
-                BasicID.Reserve[i] = reserve[i];
+                basicIDMessage.reserve[i] = reserve[i];
             }
 
         };
 
-        static void Copy(uint8_t basicIdMessage[24])
+        void Print() override
         {
-            basicIdMessage[0] = (BasicID.IDType << 4) | BasicID.UAType;
-
-            for(int i = 0; i < 20; i++)
-            {
-                basicIdMessage[i + 1] = BasicID.UASID[i];
-            }
-
-            for(int i = 0; i < 3; i++)
-            {
-                basicIdMessage[i + 21] = BasicID.Reserve[i];
-            }
-
-
+            std::cout << "\nBasicID Message" << '\n';
+            std::cout << " ID Type: " << basicIDMessage.idType << '\n';
+            std::cout << " UA Type: " << basicIDMessage.uaType << '\n';
+            // std::cout << " UAS ID: " << basicIDMessage.uasId << '\n';
         }
 };

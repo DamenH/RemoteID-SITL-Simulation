@@ -1,29 +1,32 @@
 #include <stdint.h>
 
-struct AuthenticationMessagePagesData {
-    unsigned AuthType : 4;
-    unsigned PageNumber : 4;
-    uint8_t AuthenticationData[23];
-} AuthenticationPages;
+struct authenticationMessagePagesData {
+    unsigned authType : 4;
+    unsigned pageNumber : 4;
+    uint8_t authenticationData[23];
+};
 
-class AuthenticationMessagePages {
+class AuthenticationMessagePages: public MessageBody {
     public:
-        static void Encode(
+
+        struct authenticationMessagePagesData authenticationPages;
+
+        AuthenticationMessagePages(
             uint8_t authType,
             uint8_t pageNumber,
             uint8_t authenticationData[23]
         )
         {
-            AuthenticationPages.AuthType = authType & 0xF;
-            AuthenticationPages.PageNumber = pageNumber & 0xF;
+            authenticationPages.authType = authType;
+            authenticationPages.pageNumber = pageNumber;
 
             for(int i = 0; i < 23; i++)
             {
-                AuthenticationPages.AuthenticationData[i] = authenticationData[i];
+                authenticationPages.authenticationData[i] = authenticationData[i];
             }
         };
 
-        static void Copy(uint8_t authenticationMessagePages[24])
+        void Print() override
         {
 
         }

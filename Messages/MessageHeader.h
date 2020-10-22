@@ -1,29 +1,33 @@
 #include <stdint.h>
+#include <iostream>
+
+#include "MessageBody.h"
 
 struct MessageHeaderData {
     MessageHeaderData() : ProtocolVersion(0x0){}
     unsigned MessageType : 4;
     unsigned ProtocolVersion : 4;
-    uint8_t MessageData[24];
-} Header;
+    MessageBody *messageBody;
+};
 
 class MessageHeader {
     public:
-        static void Encode(
+        struct MessageHeaderData header;
+
+        MessageHeader(
             uint8_t messageType,
-            uint8_t messageData[24]
+            MessageBody *messageBody
         )
         {
-            Header.MessageType = messageType & 0xF;
-
-            for(int i = 0; i < 24; i++)
-            {
-                Header.MessageData[i] = messageData[i];
-            }
+            header.MessageType = messageType & 0xF;
+            header.messageBody = messageBody;
         }
 
-        static void Copy(uint8_t message[25])
+        void Print()
         {
-
+            std::cout << "Message Type: " << header.MessageType << '\n';
+            std::cout << "Protocol Version: " << header.ProtocolVersion << '\n';
+            header.messageBody->Print();
+            std::cout << '\n';
         }
 };
