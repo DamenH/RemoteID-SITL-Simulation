@@ -1,20 +1,20 @@
 #include <stdint.h>
 
-struct SystemMessageData {
-    unsigned Flags : 8;
-    uint8_t OperatorLatitude[4];
-    uint8_t OperatorLongitude[4];
-    uint8_t AreaCount[2];
-    unsigned AreaRadius : 8;
-    uint8_t AreaCeiling[2];
-    uint8_t AreaFloor[2];
-    uint8_t Reserved[8];
+struct systemMessageData {
+    unsigned flags : 8;
+    uint8_t operatorLatitude[4];
+    uint8_t operatorLongitude[4];
+    uint8_t areaCount[2];
+    unsigned areaRadius : 8;
+    uint8_t areaCeiling[2];
+    uint8_t areaFloor[2];
+    uint8_t reserved[8];
 };
 
 class SystemMessage: public MessageBody {
     public:
 
-        struct SystemMessageData system;
+        struct systemMessageData system;
 
         SystemMessage(
             uint8_t flags,
@@ -22,16 +22,55 @@ class SystemMessage: public MessageBody {
             uint8_t operatorLongitude[4],
             uint8_t areaCount[2],
             uint8_t areaRadius,
-            uint8_t AreaCeiling[2],
-            uint8_t AreaFloor[2]
+            uint8_t areaCeiling[2],
+            uint8_t areaFloor[2]
         )
         {
-            system.Flags = flags;
-            system.AreaRadius = areaRadius;
+            system.flags = flags;
+            system.areaRadius = areaRadius;
+            for(int i = 0; i < 4; i++)
+            {
+                system.operatorLatitude[i] = operatorLatitude[i];
+                system.operatorLongitude[i] = operatorLongitude[i];
+            }
+            for(int i = 0; i < 2; i++)
+            {
+                system.areaCount[i] = areaCount[i];
+                system.areaCeiling[i] = areaCeiling[i];
+                system.areaFloor[i] = areaFloor[i];
+            }
         };
 
         void Print() override
         {
-
+            std::cout << "\nSystem Message" << '\n';
+            std::cout << " Flags: " << system.flags << '\n';
+            std::cout << " Operator Latitude: ";
+            for(int i = 0; i < 4; i++)
+            {
+                std::cout << system.operatorLatitude[i];
+            }
+            std::cout << " Operator Longitude: ";
+            for(int i = 0; i < 4; i++)
+            {
+                std::cout << system.operatorLongitude[i];
+            }
+            std::cout << " Area Count: ";
+            for(int i = 0; i < 2; i++)
+            {
+                std::cout << system.areaCount[i];
+            }
+            std::cout << " Area Radius: " << system.areaRadius << '\n';
+            std::cout << " Area Ceiling: ";
+            for(int i = 0; i < 2; i++)
+            {
+                std::cout << system.areaFloor[i];
+            }
+            std::cout << " Area Floor: ";
+            for(int i = 0; i < 2; i++)
+            {
+                std::cout << system.areaFloor[i];
+            }
+            std::cout << '\n';
         }
 };

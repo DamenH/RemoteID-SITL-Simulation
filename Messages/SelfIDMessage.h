@@ -25,6 +25,13 @@ class SelfIDMessage: public MessageBody {
 
         void Print() override
         {
-
+            std::cout << "\nSelfID Message" << '\n';
+            std::cout << " Description Type: " << selfID.descriptionType << '\n';
+            std::cout << " UAS ID: ";
+            for(int i = 0; i < 23; i++)
+            {
+                std::cout << selfID.description[i];
+            }
+            std::cout << '\n';
         }
 };

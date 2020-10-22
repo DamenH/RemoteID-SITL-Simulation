@@ -28,6 +28,15 @@ class AuthenticationMessagePages: public MessageBody {
 
         void Print() override
         {
+            // std::cout << "\nAuthentication Pages Message" << '\n';
+            // std::cout << " nAuth Type: " << operatorID.operatorIdType << '\n';
+            // std::cout << " nOperatorID Type: " << operatorID.operatorIdType << '\n';
+            // std::cout << " Operator ID: ";
+            // for(int i = 0; i < 20; i++)
+            // {
+            //     std::cout << operatorID.operatorId[i];
+            // }
+            // std::cout << '\n';
 
         }
 };
