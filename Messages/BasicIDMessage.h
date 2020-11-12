@@ -4,7 +4,7 @@
 struct basicMessageData {
     unsigned idType : 4;
     unsigned uaType : 4;
-    uint8_t uasId[20];
+    char uasId[20];
     uint8_t reserve[3];
 };
 
@@ -16,7 +16,7 @@ class BasicIDMessage: public MessageBody {
         BasicIDMessage(
            uint8_t idType,
            uint8_t uaType,
-           uint8_t uasId[20]
+           char uasId[20]
         )
        {
             basicIDMessage.idType = idType;
@@ -38,7 +38,7 @@ class BasicIDMessage: public MessageBody {
 
         void Print() override
         {
-            std::cout << "\nBasicID Message" << '\n';
+            std::cout << "BasicID Message" << '\n';
             std::cout << " ID Type: " << basicIDMessage.idType << '\n';
             std::cout << " UA Type: " << basicIDMessage.uaType << '\n';
             std::cout << " UAS ID: ";

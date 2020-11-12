@@ -75,6 +75,31 @@ class LocationVectorMessage: public MessageBody {
 
         void Print() override
         {
+            std::cout << "Location Vector Message" << '\n';
+            std::cout << " Status: " << locationVector.status << '\n';
+            std::cout << " Flags: " << locationVector.flags << '\n';
+            std::cout << " Track Direction: " << locationVector.trackDirection << '\n';
+            std::cout << " Speed: " << locationVector.speed << '\n';
+            std::cout << " Vertical Speed: " << locationVector.verticalSpeed << '\n';
+            std::cout << " Latitude: ";
+            std::cout << *(uint32_t *)&locationVector.latitude << "\n";
+            std::cout << " Longitude: ";
+            std::cout << *(uint32_t *)&locationVector.longitude << "\n";
+            std::cout << " Pressure Altitude: ";
+            std::cout << *(uint32_t *)&locationVector.pressureAltitude << "\n";
+            std::cout << " Geodetic Altitude: ";
+            std::cout << *(uint32_t *)&locationVector.geodeticAltitude << "\n";
+            std::cout << " Height: ";
+            std::cout << *(uint32_t *)&locationVector.height << "\n";
+            std::cout << " Vertical Accuracy: " << locationVector.verticalAccuracy << '\n';
+            std::cout << " Horizontal Accuracy: " << locationVector.horizontalAccuracy << '\n';
+            std::cout << " Baro Accuracy: " << locationVector.baroAltitudeAccuracy << '\n';
+            std::cout << " Speed Accuracy: " << locationVector.speedAccuracy << '\n';
+            std::cout << " Timestamp: ";
+            std::cout << *(uint32_t *)&locationVector.timestamp << "\n";
+            std::cout << " Timestamp Accuracy: " << locationVector.timestampAccuracy << '\n';
+
 
         }
+
 };

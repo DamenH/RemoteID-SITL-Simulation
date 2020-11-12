@@ -2,7 +2,7 @@
 
 struct operatorIDMessageData {
     unsigned operatorIdType : 8;
-    uint8_t operatorId[20];
+    char operatorId[20];
     uint8_t reserved[3];
 };
 
@@ -13,7 +13,7 @@ class OperatorIDMessage: public MessageBody {
 
         OperatorIDMessage(
             uint8_t operatorIdType,
-            uint8_t operatorId[20]
+            char operatorId[20]
         )
         {
             operatorID.operatorIdType = operatorIdType;
@@ -27,7 +27,7 @@ class OperatorIDMessage: public MessageBody {
 
         void Print() override
         {
-            std::cout << "\nOperatorID Message" << '\n';
+            std::cout << "OperatorID Message" << '\n';
             std::cout << " nOperatorID Type: " << operatorID.operatorIdType << '\n';
             std::cout << " Operator ID: ";
             for(int i = 0; i < 20; i++)

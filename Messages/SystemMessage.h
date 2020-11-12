@@ -43,18 +43,12 @@ class SystemMessage: public MessageBody {
 
         void Print() override
         {
-            std::cout << "\nSystem Message" << '\n';
+            std::cout << "System Message" << '\n';
             std::cout << " Flags: " << system.flags << '\n';
             std::cout << " Operator Latitude: ";
-            for(int i = 0; i < 4; i++)
-            {
-                std::cout << system.operatorLatitude[i];
-            }
+            std::cout << *(uint32_t *)&system.operatorLatitude;
             std::cout << " Operator Longitude: ";
-            for(int i = 0; i < 4; i++)
-            {
-                std::cout << system.operatorLongitude[i];
-            }
+            std::cout << *(uint32_t *)&system.operatorLongitude;
             std::cout << " Area Count: ";
             for(int i = 0; i < 2; i++)
             {

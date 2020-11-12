@@ -2,7 +2,7 @@
 
 struct selfIDMessageData {
     unsigned descriptionType : 8;
-    uint8_t description[23];
+    char description[23];
 };
 
 class SelfIDMessage: public MessageBody {
@@ -12,7 +12,7 @@ class SelfIDMessage: public MessageBody {
 
         SelfIDMessage(
             uint8_t descriptionType,
-            uint8_t description[23]
+            char description[23]
         )
         {
             selfID.descriptionType = descriptionType;
@@ -25,7 +25,7 @@ class SelfIDMessage: public MessageBody {
 
         void Print() override
         {
-            std::cout << "\nSelfID Message" << '\n';
+            std::cout << "SelfID Message" << '\n';
             std::cout << " Description Type: " << selfID.descriptionType << '\n';
             std::cout << " UAS ID: ";
             for(int i = 0; i < 23; i++)

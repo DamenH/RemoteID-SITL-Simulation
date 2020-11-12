@@ -25,7 +25,7 @@ class MessageHeader {
 
         void Print()
         {
-            std::cout << "Message Type: " << header.MessageType << '\n';
+            std::cout << "Message Type: " << header.MessageType << " ";
             std::cout << "Protocol Version: " << header.ProtocolVersion << '\n';
             header.messageBody->Print();
             std::cout << '\n';
