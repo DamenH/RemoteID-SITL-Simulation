@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include <iostream>
+#include <string>
 
 #include "MessageBody.h"
 
@@ -7,27 +7,27 @@ struct MessageHeaderData {
     MessageHeaderData() : ProtocolVersion(0x0){}
     unsigned MessageType : 4;
     unsigned ProtocolVersion : 4;
-    MessageBody *messageBody;
 };
 
 class MessageHeader {
     public:
         struct MessageHeaderData header;
 
-        MessageHeader(
-            uint8_t messageType,
-            MessageBody *messageBody
-        )
+        MessageHeader(uint8_t messageType)
         {
             header.MessageType = messageType & 0xF;
-            header.messageBody = messageBody;
         }
 
-        void Print()
+        json toJson()
         {
-            std::cout << "Message Type: " << header.MessageType << " ";
-            std::cout << "Protocol Version: " << header.ProtocolVersion << '\n';
-            header.messageBody->Print();
-            std::cout << '\n';
+            json j;
+            j["Message Type"] = "0x" + std::to_string(header.MessageType);
+            j["Protocol Version"] = "0x" + std::to_string(header.ProtocolVersion);
+            return j;
+
+            // std::cout << "Message Type: " << header.MessageType << " ";
+            // std::cout << "Protocol Version: " << header.ProtocolVersion << '\n';
+            // // header.messageBody->Print();
+            // std::cout << '\n';
         }
 };

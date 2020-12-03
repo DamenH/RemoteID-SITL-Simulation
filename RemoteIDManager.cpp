@@ -1,84 +1,83 @@
 #include "RemoteIDManager.h"
-
 #include "Messages/Messages.h"
-#include "Helpers.h"
-
+// #include "Helper.h"
 #include <stdio.h>
 #include <iostream>
 #include <math.h>
-
-
+#include <chrono>
 
 using namespace RemoteID;
 
-void RemoteIDManager::loop()
-{
+void RemoteIDManager::loop() {
 
 
     uint64_t current_time = multicopter->get_time_now_us();
 
-    // uint32_t test = 12345456;
-    // uint8_t *arr = (uint8_t *)&test;
+    if(current_time >= nextUpdate) {
 
-    // Static Updates
-    if(current_time >= nextStaticUpdate) {
+        MessagePack * messagePack = new MessagePack();
+
         // Basic
         uint8_t idType = 3;
         uint8_t uaType = 2;
         char uasID[20] = "N.123456";
+        MessageHeader *basicMessageHeader = new MessageHeader(0x0);
         BasicIDMessage *basicIdMessage = new BasicIDMessage(idType, uaType, uasID);
         MessageBody *basicBody = basicIdMessage;
-        MessageHeader *basicMessageHeader = new MessageHeader(0x0, basicBody);
-        basicMessageHeader->Print();
+        messagePack->addMessage(basicMessageHeader, basicBody);
+
 
         // Auth
-        // uint8_t authType = 0;
-        // uint8_t pageNumber = 0;
-        // uint8_t pageCount = 0;
-        // uint8_t length = 17;
-
-        // std::time_t result = std::time(nullptr);
-        // std::cout << std::asctime(std::localtime(&result)) << result << " seconds since the Epoch\n";
-        // uint8_t authenticationTimestamp[4] = {1, 2, 3, 4};
-
-        // uint8_t authenticationData[17] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17};
-        // AuthenticationMessage *authenticationMessage =  new AuthenticationMessage(
-        //     authType, 
-        //     pageNumber,
-        //     pageCount,
-        //     length,
-        //     authenticationTimestamp,
-        //     authenticationData
-        // );
-        // MessageBody *authenticationMessageBody = authenticationMessage;
-        // MessageHeader *authenticationMessageHeader = new MessageHeader(0x2, authenticationMessageBody);
-        // authenticationMessageHeader->Print();
+        uint8_t authType = 0;
+        uint8_t pageNumber = 0;
+        uint8_t pageCount = 1;
+        uint8_t length = 17;
+        //   1,605,796,610
+        // - 1,546,300,800
+        // ----------------
+        //      59,495,810
+        time_t timestamp = std::time(nullptr) - 1546300800;
+        uint32_t authenticationTimestamp = static_cast<uint32_t> (timestamp);
+        // std::cout << authenticationTimestamp << " seconds since the 01/01/2019 00:00:00\n";
+        uint8_t authenticationData[17] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17};
+        MessageHeader *authenticationMessageHeader = new MessageHeader(0x2);
+        AuthenticationMessage *authenticationMessage =  new AuthenticationMessage(
+            authType, 
+            pageNumber,
+            pageCount,
+            length,
+            authenticationTimestamp,
+            authenticationData
+        );
+        MessageBody *authenticationMessageBody = authenticationMessage;
+        messagePack->addMessage(authenticationMessageHeader, authenticationMessageBody);
 
         // AuthPages
-        // uint8_t authPagesType = 0;
-        // uint8_t pagesNumber;
-        // uint8_t authenticationPagesData[23];
-        // AuthenticationMessagePages *authenticationMessagePages =  new AuthenticationMessagePages(authPagesType, pagesNumber, authenticationPagesData);
-        // MessageBody *authenticationPagesMessageBody = authenticationMessagePages;
-        // MessageHeader *authenticationMessagePagesHeader = new MessageHeader(0x2, authenticationPagesMessageBody);
-        // authenticationMessagePagesHeader->Print();
+        uint8_t authPagesType = 0;
+        uint8_t pagesNumber = 1;
+        uint8_t authenticationPagesData[23] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23};
+        MessageHeader *authenticationMessagePagesHeader = new MessageHeader(0x2);
+        AuthenticationMessagePages *authenticationMessagePages =  new AuthenticationMessagePages(authPagesType, pagesNumber, authenticationPagesData);
+        MessageBody *authenticationPagesMessageBody = authenticationMessagePages;
+        messagePack->addMessage(authenticationMessagePagesHeader, authenticationPagesMessageBody);
 
         // SelfID
         uint8_t descriptionType = 0;
         char description[23] = "DronesRus:Survey";
+        MessageHeader *selfIDMessageHeader = new MessageHeader(0x3);
         SelfIDMessage *selfIDMessage =  new SelfIDMessage(descriptionType, description);
         MessageBody *selfIDMessageBody = selfIDMessage;
-        MessageHeader *selfIDMessageHeader = new MessageHeader(0x3, selfIDMessageBody);
-        selfIDMessageHeader->Print();
+        messagePack->addMessage(selfIDMessageHeader, selfIDMessageBody);
 
-        // SystemMessage
+        // // SystemMessage
         uint8_t systemFlags = 0;
-        uint8_t* operatorLatitude = (uint8_t *)&multicopter->home.lat;
-        uint8_t* operatorLongitude = (uint8_t *)&multicopter->home.lng;
-        uint8_t areaCount[2] = {0, 0};
+        int32_t operatorLatitude = multicopter->home.lat;
+        int32_t operatorLongitude = multicopter->home.lng;
+        uint16_t areaCount = 1;
         uint8_t areaRadius = 0;
-        uint8_t AreaCeiling[2] = {0, 0};
-        uint8_t AreaFloor[2] = {0, 0};
+        uint16_t AreaCeiling = 0;
+        uint16_t AreaFloor = 0;
+        MessageHeader *systemMessageHeader = new MessageHeader(0x4);
         SystemMessage *systemMessage =  new SystemMessage(            
             systemFlags,
             operatorLatitude,
@@ -89,50 +88,38 @@ void RemoteIDManager::loop()
             AreaFloor
         );
         MessageBody *systemMessageBody = systemMessage;
-        MessageHeader *systemMessageHeader = new MessageHeader(0x3, systemMessageBody);
-        systemMessageHeader->Print();
+        messagePack->addMessage(systemMessageHeader, systemMessageBody);
 
         // OperatorID
         uint8_t operatorIdType = 0;
         char operatorId[20] = "Damen Hannah #123";
+        MessageHeader *operatorIDMessageHeader = new MessageHeader(0x5);
         OperatorIDMessage *operatorIDMessage =  new OperatorIDMessage(operatorIdType, operatorId);
         MessageBody *operatorIDMessageBody = operatorIDMessage;
-        MessageHeader *operatorIDMessageHeader = new MessageHeader(0x3, operatorIDMessageBody);
-        operatorIDMessageHeader->Print();
+        messagePack->addMessage(operatorIDMessageHeader, operatorIDMessageBody);
 
-        nextStaticUpdate += LegacyBTStatic;
-    }
-
-    // Dynamic Updates
-    if(current_time >= nextDynamicUpdate) {
         // Location
-
-        // if(previousLocation.is_zero()) previousLocation = gps->location();
-
+        // // if(previousLocation.is_zero()) previousLocation = gps->location();
         gps->update();
         const Location &currentLocation = gps->location();
-
-        // printf("%" PRId32 "\n", currentLocation.alt);
-        
+        // // printf("%" PRId32 "\n", currentLocation.alt);
         uint8_t status = 0;
         uint8_t locationVectorFlags = 0;
         uint8_t trackDirection = (uint8_t)gps->ground_course();
         uint8_t speed = (uint8_t)gps->ground_speed();
         uint8_t verticalSpeed = 0; // calculate from velocity_ef
-        uint8_t* latitude = (uint8_t *)&currentLocation.lat;
-        uint8_t* longitude = (uint8_t *)&currentLocation.lng;
-        uint8_t pressureAltitude[2] = {0, 0};
-        // uint8_t* geodeticAltitude = (uint8_t *)&currentLocation.alt;
-        // uint8_t* height = (uint8_t *)&currentLocation.alt;
-        uint8_t geodeticAltitude[2] = {0, 0};
-        uint8_t height[2] = {0, 0};
-
+        int32_t latitude = currentLocation.lat;
+        int32_t longitude = currentLocation.lng;
+        uint16_t pressureAltitude = 584;
+        uint16_t geodeticAltitude = 584;
+        uint16_t height = 0;
         uint8_t verticalAccuracy = 0;
         uint8_t horizontalAccuracy = 0;
         uint8_t baroAltitudeAccuracy = 0;
         uint8_t speedAccuracy = 0;
-        uint8_t locationVectorTimestamp[2] = {0, 0}; //(gps->time_week_ms()/1000); // 0–36000
+        uint16_t locationVectorTimestamp = 0; //(gps->time_week_ms()/1000); // 0–36000
         uint8_t timestampAccuracy = 0;
+        MessageHeader *locationVectorMessageHeader = new MessageHeader(0x1);
         LocationVectorMessage *locationVectorMessage =  new LocationVectorMessage(
             status,
             locationVectorFlags,
@@ -152,11 +139,13 @@ void RemoteIDManager::loop()
             timestampAccuracy
         );
         MessageBody *locationVectorMessageBody = locationVectorMessage;
-        MessageHeader *locationVectorMessageHeader = new MessageHeader(0x1, locationVectorMessageBody);
-        locationVectorMessageHeader->Print();
+        messagePack->addMessage(locationVectorMessageHeader, locationVectorMessageBody);
 
+        // std::cout << messagePack->toJson().dump(4) << std::endl;
 
-        nextDynamicUpdate += LegacyBTDynamic;
+        logFile << messagePack->toJson().dump(4) << std::endl;
+
+        nextUpdate += updateRate;
     }
     
 }

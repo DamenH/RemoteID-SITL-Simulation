@@ -23,15 +23,11 @@ class SelfIDMessage: public MessageBody {
             }
         };
 
-        void Print() override
+        json toJson() override
         {
-            std::cout << "SelfID Message" << '\n';
-            std::cout << " Description Type: " << selfID.descriptionType << '\n';
-            std::cout << " UAS ID: ";
-            for(int i = 0; i < 23; i++)
-            {
-                std::cout << selfID.description[i];
-            }
-            std::cout << '\n';
+            json j;
+            j["Description Type"] = std::to_string(selfID.descriptionType);
+            j["UAS ID"] = selfID.description;
+            return j;
         }
 };

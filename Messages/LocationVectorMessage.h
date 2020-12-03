@@ -6,16 +6,16 @@ struct locationVectorMessageData {
     uint8_t trackDirection;
     uint8_t speed;
     uint8_t verticalSpeed;
-    uint8_t latitude[4];
-    uint8_t longitude[4];
-    uint8_t pressureAltitude[2];
-    uint8_t geodeticAltitude[2];
-    uint8_t height[2];
+    int32_t latitude;
+    int32_t longitude;
+    uint16_t pressureAltitude;
+    uint16_t geodeticAltitude;
+    uint16_t height;
     unsigned verticalAccuracy : 4;
     unsigned horizontalAccuracy : 4;
     unsigned baroAltitudeAccuracy : 3;
     unsigned speedAccuracy : 3;
-    uint8_t timestamp[2];
+    uint16_t timestamp;
     unsigned reserved23 : 4;
     unsigned timestampAccuracy : 4;
     uint8_t reserved24;
@@ -31,16 +31,16 @@ class LocationVectorMessage: public MessageBody {
             uint8_t trackDirection,
             uint8_t speed,
             uint8_t verticalSpeed,
-            uint8_t latitude[4],
-            uint8_t longitude[4],
-            uint8_t pressureAltitude[2],
-            uint8_t geodeticAltitude[2],
-            uint8_t height[2],
+            int32_t latitude,
+            int32_t longitude,
+            uint16_t pressureAltitude,
+            uint16_t geodeticAltitude,
+            uint16_t height,
             uint8_t verticalAccuracy,
             uint8_t horizontalAccuracy,
             uint8_t baroAltitudeAccuracy,
             uint8_t speedAccuracy,
-            uint8_t timestamp[2],
+            uint16_t timestamp,
             uint8_t timestampAccuracy
         )
         {
@@ -54,52 +54,38 @@ class LocationVectorMessage: public MessageBody {
             locationVector.baroAltitudeAccuracy = baroAltitudeAccuracy;
             locationVector.speedAccuracy = speedAccuracy;
             locationVector.timestampAccuracy = timestampAccuracy;
-
-            for(int i = 0; i < 4; i++)
-            {
-                locationVector.latitude[i] = latitude[i];
-                locationVector.longitude[i] = longitude[i];
-            }
-
-            for(int i = 0; i < 2; i++)
-            {
-                locationVector.pressureAltitude[i] = pressureAltitude[i];
-                locationVector.geodeticAltitude[i] = geodeticAltitude[i];
-                locationVector.height[i] = height[i];
-                locationVector.timestamp[i] = timestamp[i];
-            }
+            locationVector.latitude = latitude;
+            locationVector.longitude = longitude;
+            locationVector.pressureAltitude = pressureAltitude;
+            locationVector.geodeticAltitude = geodeticAltitude;
+            locationVector.height = height;
+            locationVector.timestamp = timestamp;
+            
 
             
 
         };
 
-        void Print() override
+        json toJson() override
         {
-            std::cout << "Location Vector Message" << '\n';
-            std::cout << " Status: " << locationVector.status << '\n';
-            std::cout << " Flags: " << locationVector.flags << '\n';
-            std::cout << " Track Direction: " << locationVector.trackDirection << '\n';
-            std::cout << " Speed: " << locationVector.speed << '\n';
-            std::cout << " Vertical Speed: " << locationVector.verticalSpeed << '\n';
-            std::cout << " Latitude: ";
-            std::cout << *(uint32_t *)&locationVector.latitude << "\n";
-            std::cout << " Longitude: ";
-            std::cout << *(uint32_t *)&locationVector.longitude << "\n";
-            std::cout << " Pressure Altitude: ";
-            std::cout << *(uint32_t *)&locationVector.pressureAltitude << "\n";
-            std::cout << " Geodetic Altitude: ";
-            std::cout << *(uint32_t *)&locationVector.geodeticAltitude << "\n";
-            std::cout << " Height: ";
-            std::cout << *(uint32_t *)&locationVector.height << "\n";
-            std::cout << " Vertical Accuracy: " << locationVector.verticalAccuracy << '\n';
-            std::cout << " Horizontal Accuracy: " << locationVector.horizontalAccuracy << '\n';
-            std::cout << " Baro Accuracy: " << locationVector.baroAltitudeAccuracy << '\n';
-            std::cout << " Speed Accuracy: " << locationVector.speedAccuracy << '\n';
-            std::cout << " Timestamp: ";
-            std::cout << *(uint32_t *)&locationVector.timestamp << "\n";
-            std::cout << " Timestamp Accuracy: " << locationVector.timestampAccuracy << '\n';
-
-
+            json j;
+            j["Status"] = std::to_string(locationVector.status);
+            j["Flags"] = std::to_string(locationVector.flags);
+            j["Track Direction"] = std::to_string(locationVector.trackDirection);
+            j["Speed"] = std::to_string(locationVector.speed);
+            j["Vertical Speed"] = std::to_string(locationVector.verticalSpeed);
+            j["Latitude"] = std::to_string(locationVector.latitude);
+            j["Longitude"] = std::to_string(locationVector.longitude);
+            j["Pressure Altitude"] = std::to_string(locationVector.pressureAltitude);
+            j["Geodetic Altitude"] = std::to_string(locationVector.geodeticAltitude);
+            j["Height"] = std::to_string(locationVector.height);
+            j["Vertical Accuracy"] = std::to_string(locationVector.verticalAccuracy);
+            j["Horizontal Accuracy"] = std::to_string(locationVector.horizontalAccuracy);
+            j["Baro Accuracy"] = std::to_string(locationVector.baroAltitudeAccuracy);
+            j["Speed Accuracy"] = std::to_string(locationVector.speedAccuracy);
+            j["Timestamp"] = std::to_string(locationVector.timestamp);
+            j["Timestamp Accuracy"] =std::to_string(locationVector.timestampAccuracy);
+            return j;
         }
 
 };

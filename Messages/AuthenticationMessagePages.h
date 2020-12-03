@@ -26,17 +26,12 @@ class AuthenticationMessagePages: public MessageBody {
             }
         };
 
-        void Print() override
+        json toJson() override
         {
-            // std::cout << "\nAuthentication Pages Message" << '\n';
-            // std::cout << " nAuth Type: " << operatorID.operatorIdType << '\n';
-            // std::cout << " nOperatorID Type: " << operatorID.operatorIdType << '\n';
-            // std::cout << " Operator ID: ";
-            // for(int i = 0; i < 20; i++)
-            // {
-            //     std::cout << operatorID.operatorId[i];
-            // }
-            // std::cout << '\n';
-
+            json j;
+            j["Auth Type"] = std::to_string(authenticationPages.authType);
+            j["Page Number"] = std::to_string(authenticationPages.pageNumber);
+            j["Authentication Data"] = "...";
+            return j;
         }
 };

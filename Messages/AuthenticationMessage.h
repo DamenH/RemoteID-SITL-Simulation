@@ -5,7 +5,7 @@ struct authenticationMessageData {
     unsigned pageNumber : 4;
     unsigned pageCount : 8;
     unsigned length : 8;
-    uint8_t timestamp[4];
+    uint32_t timestamp;
     uint8_t authenticationData[17];
 };
 
@@ -19,7 +19,7 @@ class AuthenticationMessage: public MessageBody {
             uint8_t pageNumber,
             uint8_t pageCount,
             uint8_t length,
-            uint8_t timestamp[4],
+            uint32_t timestamp,
             uint8_t authenticationData[17]
         )
         {
@@ -27,11 +27,7 @@ class AuthenticationMessage: public MessageBody {
             authentication.pageNumber = pageNumber;
             authentication.pageCount = pageCount;
             authentication.length = length;
-
-            for(int i = 0; i < 4; i++)
-            {
-                authentication.timestamp[i] = timestamp[i];
-            }
+            authentication.timestamp = timestamp;
 
             for(int i = 0; i < 17; i++)
             {
@@ -40,24 +36,16 @@ class AuthenticationMessage: public MessageBody {
 
         };
 
-        void Print() override
+        json toJson() override
         {
-            std::cout << "\nAuthentication Message" << '\n';
-            std::cout << " Auth Type: " << authentication.authType << '\n';
-            std::cout << " Page Number: " << authentication.pageNumber << '\n';
-            std::cout << " Page Count: " << authentication.pageCount << '\n';
-            std::cout << " Length: " << authentication.length << '\n';
-            std::cout << " Timestamp: ";
-            for(int i = 0; i < 4; i++)
-            {
-                std::cout << authentication.timestamp[i];
-            }
-            std::cout << " Authentication Data: ";
-            for(int i = 0; i < 17; i++)
-            {
-                std::cout << authentication.authenticationData[i];
-            }
-            std::cout << '\n';
+            json j;
+            j["Auth Type"] = std::to_string(authentication.authType);
+            j["Page Number"] = std::to_string(authentication.pageNumber);
+            j["Page Count"] = std::to_string(authentication.pageCount);
+            j["Length"] = std::to_string(authentication.length);
+            j["Timestamp"] = std::to_string(authentication.timestamp);
+            j["Authentication Data"] = "...";
+            return j;
 
         }
 };

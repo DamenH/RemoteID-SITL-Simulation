@@ -1,7 +1,10 @@
+#include "../json.hpp"
+using json = nlohmann::json;
+
 class MessageBody {
     public:
-        virtual void Print()
-        {
-            
+        virtual json toJson(){
+            json j;
+            return j;
         }
 };

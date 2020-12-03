@@ -25,15 +25,11 @@ class OperatorIDMessage: public MessageBody {
 
         };
 
-        void Print() override
+        json toJson() override
         {
-            std::cout << "OperatorID Message" << '\n';
-            std::cout << " nOperatorID Type: " << operatorID.operatorIdType << '\n';
-            std::cout << " Operator ID: ";
-            for(int i = 0; i < 20; i++)
-            {
-                std::cout << operatorID.operatorId[i];
-            }
-            std::cout << '\n';
+            json j;
+            j["OperatorID Type"] = std::to_string(operatorID.operatorIdType);
+            j["Operator ID"] = operatorID.operatorId;
+            return j;
         }
 };

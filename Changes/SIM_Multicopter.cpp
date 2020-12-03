@@ -85,7 +85,7 @@ void MultiCopter::update(const struct sitl_input &input)
 
     
     // call update on RemoteIDManager
-    remoteIdManager->update();
+    remoteIdManager->loop();
 
     // update magnetic field
     update_mag_field_bf();

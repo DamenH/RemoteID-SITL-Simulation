@@ -1,5 +1,4 @@
 #include <stdint.h>
-#include <iostream>
 
 struct basicMessageData {
     unsigned idType : 4;
@@ -36,16 +35,12 @@ class BasicIDMessage: public MessageBody {
 
         };
 
-        void Print() override
+        json toJson() override
         {
-            std::cout << "BasicID Message" << '\n';
-            std::cout << " ID Type: " << basicIDMessage.idType << '\n';
-            std::cout << " UA Type: " << basicIDMessage.uaType << '\n';
-            std::cout << " UAS ID: ";
-            for(int i = 0; i < 20; i++)
-            {
-                std::cout << basicIDMessage.uasId[i];
-            }
-            std::cout << '\n';
+            json j;
+            j["ID Type"] = std::to_string(basicIDMessage.idType);
+            j["UA Type"] = std::to_string(basicIDMessage.uaType);
+            j["UAS ID"] = basicIDMessage.uasId;
+            return j;
         }
 };
