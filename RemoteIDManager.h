@@ -35,7 +35,7 @@ public:
         multicopter(_multicopter)
     {
 
-        logFile.open ("/home/damen/Desktop/logs/log-" + std::to_string(std::time(nullptr) - 1546300800) + ".txt");
+        logFile.open ("/var/log/remoteid/-" + std::to_string(std::time(nullptr) - 1546300800) + ".txt");
 
         gps = AP_GPS::get_singleton();
         
